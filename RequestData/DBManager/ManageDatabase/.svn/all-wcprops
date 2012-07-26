@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/!svn/ver/2/trunk/EnterSQLIte/ManageDatabase
+END
+ManageDatabase.h
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/!svn/ver/2/trunk/EnterSQLIte/ManageDatabase/ManageDatabase.h
+END
+ManageDatabaseImp+InitDB.m
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/!svn/ver/2/trunk/EnterSQLIte/ManageDatabase/ManageDatabaseImp+InitDB.m
+END
+ManageDatabaseImp.h
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/!svn/ver/2/trunk/EnterSQLIte/ManageDatabase/ManageDatabaseImp.h
+END
+ManageDatabaseImp.m
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/!svn/ver/2/trunk/EnterSQLIte/ManageDatabase/ManageDatabaseImp.m
+END
+ManageDatabaseImp+InitDB.h
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/!svn/ver/2/trunk/EnterSQLIte/ManageDatabase/ManageDatabaseImp+InitDB.h
+END

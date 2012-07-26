@@ -1,0 +1,149 @@
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/funmatch/!svn/ver/387/SourceKit/Network/ASIHTTPRequest
+END
+ASIHTTPRequest.m
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/funmatch/!svn/ver/387/SourceKit/Network/ASIHTTPRequest/ASIHTTPRequest.m
+END
+ASINetworkQueue.h
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/funmatch/!svn/ver/2/SourceKit/Network/ASIHTTPRequest/ASINetworkQueue.h
+END
+ASICacheDelegate.h
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/funmatch/!svn/ver/2/SourceKit/Network/ASIHTTPRequest/ASICacheDelegate.h
+END
+ASIProgressDelegate.h
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/funmatch/!svn/ver/2/SourceKit/Network/ASIHTTPRequest/ASIProgressDelegate.h
+END
+ASIAuthenticationDialog.h
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/funmatch/!svn/ver/2/SourceKit/Network/ASIHTTPRequest/ASIAuthenticationDialog.h
+END
+ASIDataDecompressor.h
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/funmatch/!svn/ver/2/SourceKit/Network/ASIHTTPRequest/ASIDataDecompressor.h
+END
+ASIDownloadCache.m
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/funmatch/!svn/ver/2/SourceKit/Network/ASIHTTPRequest/ASIDownloadCache.m
+END
+Reachability.h
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/funmatch/!svn/ver/2/SourceKit/Network/ASIHTTPRequest/Reachability.h
+END
+ASINetworkQueue.m
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/funmatch/!svn/ver/3/SourceKit/Network/ASIHTTPRequest/ASINetworkQueue.m
+END
+ASIAuthenticationDialog.m
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/funmatch/!svn/ver/2/SourceKit/Network/ASIHTTPRequest/ASIAuthenticationDialog.m
+END
+ASIDataDecompressor.m
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/funmatch/!svn/ver/2/SourceKit/Network/ASIHTTPRequest/ASIDataDecompressor.m
+END
+ASINSStringAdditions.h
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/funmatch/!svn/ver/2/SourceKit/Network/ASIHTTPRequest/ASINSStringAdditions.h
+END
+ASIFormDataRequest.h
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/funmatch/!svn/ver/2/SourceKit/Network/ASIHTTPRequest/ASIFormDataRequest.h
+END
+Reachability.m
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/funmatch/!svn/ver/2/SourceKit/Network/ASIHTTPRequest/Reachability.m
+END
+ASIFormDataRequest.m
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/funmatch/!svn/ver/2/SourceKit/Network/ASIHTTPRequest/ASIFormDataRequest.m
+END
+ASIInputStream.h
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/funmatch/!svn/ver/2/SourceKit/Network/ASIHTTPRequest/ASIInputStream.h
+END
+ASINSStringAdditions.m
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/funmatch/!svn/ver/2/SourceKit/Network/ASIHTTPRequest/ASINSStringAdditions.m
+END
+ASIHTTPRequestConfig.h
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/funmatch/!svn/ver/2/SourceKit/Network/ASIHTTPRequest/ASIHTTPRequestConfig.h
+END
+ASIInputStream.m
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/funmatch/!svn/ver/2/SourceKit/Network/ASIHTTPRequest/ASIInputStream.m
+END
+ASIHTTPRequestDelegate.h
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/funmatch/!svn/ver/2/SourceKit/Network/ASIHTTPRequest/ASIHTTPRequestDelegate.h
+END
+ASIDataCompressor.h
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/funmatch/!svn/ver/2/SourceKit/Network/ASIHTTPRequest/ASIDataCompressor.h
+END
+ASIHTTPRequest.h
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/funmatch/!svn/ver/2/SourceKit/Network/ASIHTTPRequest/ASIHTTPRequest.h
+END
+ASIDownloadCache.h
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/funmatch/!svn/ver/2/SourceKit/Network/ASIHTTPRequest/ASIDownloadCache.h
+END
+ASIDataCompressor.m
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/funmatch/!svn/ver/2/SourceKit/Network/ASIHTTPRequest/ASIDataCompressor.m
+END

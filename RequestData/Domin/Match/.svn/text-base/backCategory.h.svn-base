@@ -1,0 +1,15 @@
+//
+//  backCategory.h
+//  funMatch_iPad
+//
+//  Created by 叶次昌 叶 on 12-6-21.
+//  Copyright (c) 2012年 北京豪腾嘉科有限公司. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+#import "ModelObject.h"
+@interface backCategory : ModelObject
+@property(nonatomic,retain)NSString *urlStirng;
+@property(nonatomic,retain)NSString *name;
+@property(nonatomic,assign)NSInteger typeId;
+@end

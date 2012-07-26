@@ -1,0 +1,52 @@
+//
+//  TGoods.m
+//  funMatch_iPad
+//
+//  Created by Dean on 12-6-21.
+//  Copyright (c) 2012年 __MyCompanyName__. All rights reserved.
+//
+
+#import "TGoods.h"
+#import "Utils.h"
+
+@implementation TGoods
+@synthesize name = _name;
+@synthesize price = _price;
+@synthesize buyURL = _buyURL;
+@synthesize picURL = _picURL;
+@synthesize urlArray = _urlArray;
+
+
+- (void)dealloc
+{
+    RELEASE_SAFELY(_name)
+    RELEASE_SAFELY(_price)
+    RELEASE_SAFELY(_buyURL)
+    RELEASE_SAFELY(_picURL)
+    RELEASE_SAFELY(_urlArray)
+    [super dealloc];
+}
+
+- (id)initWithAttributes:(NSDictionary *)attributes
+{
+    if(self = [super init]){
+        self.name = [NSString stringWithFormat:@"%@",[attributes valueForKey:@"title"]];
+        self.price = [NSString stringWithFormat:@"%@",[attributes valueForKey:@"price"]];
+        self.buyURL = [NSString stringWithFormat:@"%@",[attributes valueForKey:@"detail_url"]];
+        self.picURL = [NSString stringWithFormat:@"%@",[attributes valueForKey:@"pic_url"]];
+        
+        self.urlArray = [NSMutableArray array];
+        NSDictionary *dict = [attributes valueForKey:@"item_imgs"];
+        NSArray *array = [dict valueForKey:@"item_img"];
+        for( NSDictionary *dic in array) {
+            NSString *url = [NSString stringWithFormat:@"%@",[dic valueForKey:@"url"]];
+            [self.urlArray addObject:url];
+        }
+    }
+    
+    return self;
+}
+
+
+
+@end

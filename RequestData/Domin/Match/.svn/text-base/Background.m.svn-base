@@ -1,0 +1,35 @@
+//
+//  Background.m
+//  funMatch
+//
+//  Created by 谈 文钊 on 12/25/11.
+//  Copyright (c) 2011 __MyCompanyName__. All rights reserved.
+//
+
+#import "Background.h"
+#import "DominKit.h"
+
+@implementation Background
+
+@synthesize backgroundId = _backgroundId;
+@synthesize thumsUrl = _thumsUrl;
+@synthesize imgUrl = _imgUrl;
+
+- (void)dealloc
+{
+    [_imgUrl release];
+    [_thumsUrl release];
+    [super dealloc];
+}
+
+- (id)initWithAttributes:(NSDictionary *)attributes
+{
+    if (self = [super init]) {
+        self.backgroundId = [[attributes valueForKey:@"background_id"] integerValue];
+        self.imgUrl = [NSString stringWithFormat:@"%@%@", kWebSiteURL, [attributes valueForKey:@"img"]];
+        self.thumsUrl = [NSString stringWithFormat:@"%@%@", kWebSiteURL, [attributes valueForKey:@"thumbs"]];
+    }
+    return self;
+}
+
+@end

@@ -1,0 +1,213 @@
+//
+//  HTTable.m
+//  EnterSQLIte
+//
+//  Created by wei yang on 12-7-9.
+//  Copyright (c) 2012年 __MyCompanyName__. All rights reserved.
+//
+
+#import "HTTable.h"
+
+@implementation HTTable
+
+@synthesize tableName = _tableName;
+@synthesize tableProperty = _tableProperty;
+@synthesize manageTable = _manageTable;
+
+- (id)init{
+  if (self = [super init]) {
+    _manageTable = [[ManageTableImp alloc] init];
+  }
+  return self;
+}
+
+- (id)initWithTableName:(NSString *)tableName{
+  if(self = [self init]){
+    _tableName = tableName;
+    _tableProperty = [_manageTable getPropertyAndTypeByTableName:tableName];
+  }
+  return self;
+}
+
+- (void)dealloc{
+  
+  [super dealloc];
+  [_manageTable release];
+
+}
+
+- (bool)checkRecord:(NSMutableDictionary*)record{
+  
+  NSEnumerator *recordProperties = [record keyEnumerator];
+  NSEnumerator *tableProperties = [_tableProperty keyEnumerator];
+  id recordProperty;
+  
+  //check the effective of the record property, if not exist in 
+  //the table property , then it's wrong..
+  while ((recordProperty = [recordProperties nextObject])) {
+    bool existInTableProperty = NO;
+    id tableProperty;
+    while ((tableProperty = [tableProperties nextObject])) {
+      if ([tableProperty isEqualToString:recordProperty]) {
+        existInTableProperty = YES;
+        break;
+      }
+    }
+    tableProperties = [_tableProperty keyEnumerator];
+    if (existInTableProperty == NO) {
+      return NO;
+    }
+  }
+  return YES;
+}
+
+- (NSMutableArray*)queryRecord:(NSMutableArray*)columns 
+                UseWhereClause:(NSString*)whereClause
+                       GroupBy:(NSString*)groupBy
+                        Having:(NSString*)having
+                       OrderBy:(NSString*)orderBy{
+  
+  //link a select sql sentence..
+  NSString *querySql = [NSString stringWithFormat:@"select "];
+ 
+  //link the colums..
+  if (columns == nil) {
+    querySql = [querySql stringByAppendingFormat:@"*"];
+  }
+  
+  else{
+    for (int i = 0; i < [columns count]; i++) {
+      querySql = [querySql stringByAppendingFormat:@" %@,",[columns objectAtIndex:i]];
+    }
+    querySql = [querySql substringToIndex:[querySql length] - 1];
+  }
+  
+  //link groupby having and orderby..
+  NSString *where = [NSString stringWithFormat:@"where "];
+  if (whereClause != nil) {
+    where = [where stringByAppendingString:whereClause];
+    whereClause = where;
+  }
+  whereClause == nil ? whereClause = [NSString stringWithFormat:@""]:whereClause;
+  groupBy == nil ? groupBy = [NSString stringWithFormat:@""]:groupBy;
+  having == nil ? having = [NSString stringWithFormat:@""]:having;
+  orderBy == nil ? orderBy = [NSString stringWithFormat:@""]:orderBy;
+  
+  querySql = [querySql stringByAppendingFormat:@"from %@ %@ %@ %@ %@",_tableName,whereClause,
+              groupBy,having,
+              orderBy];
+  return [_manageTable queryBySqlString:[querySql UTF8String]
+                            ColumnCount:[self.tableProperty count]];
+}
+
+- (NSMutableArray*)listAllRecord{
+  return [self queryRecord:nil UseWhereClause:nil GroupBy:nil Having:nil OrderBy:nil];
+}
+
+- (NSMutableArray*)findRecord:(NSString *)whereClause{
+  return [self queryRecord:nil UseWhereClause:whereClause GroupBy:nil Having:nil OrderBy:nil];
+}
+
+- (bool)insertSingleRecord:(NSMutableDictionary *)record{
+  
+  if([self checkRecord:record] == NO){
+    return NO;
+  }
+  
+  //link a insert sentence.. 
+  NSString *insertSql = [NSString stringWithFormat:@"insert into %@ (",_tableName];
+  
+  //link the property
+  NSEnumerator *propertys = [record keyEnumerator];
+  id property;
+   while((property = [propertys nextObject])){
+    insertSql = [insertSql stringByAppendingFormat:@"%@,",property];
+  }
+  
+  //link the value of property..
+  insertSql = [insertSql substringToIndex:[insertSql length] - 1];
+  insertSql = [insertSql stringByAppendingFormat:@") values("];
+  
+  propertys = [record keyEnumerator];
+  
+  id propertyType;
+  
+  while((property = [propertys nextObject])){
+    propertyType = [_tableProperty objectForKey:property];
+    switch ((int)(propertyType)) {
+      case SQLITE_INTEGER:
+        insertSql = [insertSql stringByAppendingFormat:@"%d,",[record objectForKey:property]];
+        break;
+      case SQLITE_FLOAT:
+        insertSql = [insertSql stringByAppendingFormat:@"%f,",[record objectForKey:property]];
+      case SQLITE_TEXT:
+        insertSql = [insertSql stringByAppendingFormat:@"'%@',",[record objectForKey:property]];
+      default:
+        insertSql = [insertSql stringByAppendingFormat:@"'%@',",[record objectForKey:property]];
+        break;
+    }
+  }
+  insertSql = [insertSql substringToIndex:[insertSql length] - 1];
+  insertSql = [insertSql stringByAppendingFormat:@")"];
+  
+  return [_manageTable insertBySqlString:[insertSql UTF8String]];
+  
+}
+
+- (bool)deleteSingleRecord:(NSString*)whereClause{
+  
+  // link a delete sentence..
+  
+  NSString *deleteSql = [NSString stringWithFormat:@"delete from %@ where ",_tableName];
+  
+  whereClause == nil ? whereClause = [NSString stringWithFormat:@""]:whereClause;
+  
+  deleteSql = [deleteSql stringByAppendingFormat:@"%@",whereClause];
+  
+  return [_manageTable deleteBySqlString:[deleteSql UTF8String]];
+}
+
+- (bool)modifySingleRecord:(NSMutableDictionary*)newRecord 
+            UseWhereClause:(NSString*)whereClause{
+  
+  if([self checkRecord:newRecord] == NO){
+    return NO;
+  }
+  
+  //link a update sentence..
+  
+  NSString *modifySql = [NSString stringWithFormat:@"update %@ set ",_tableName];
+  NSEnumerator *propertys = [newRecord keyEnumerator];
+  id property;
+  
+  //check the type of the property
+  while ((property = [propertys nextObject])) {
+    
+    modifySql = [modifySql stringByAppendingFormat:@"%@ = ",property];
+    id propertyType = [_tableProperty objectForKey:property];
+    propertyType = [_tableProperty objectForKey:property];
+    
+    switch ((int)(propertyType)) {
+      case SQLITE_INTEGER:
+        modifySql = [modifySql stringByAppendingFormat:@"%d,",[newRecord objectForKey:property]];
+        break;
+      case SQLITE_FLOAT:
+        modifySql = [modifySql stringByAppendingFormat:@"%f,",[newRecord objectForKey:property]];
+      case SQLITE_TEXT:
+        modifySql = [modifySql stringByAppendingFormat:@"'%@',",[newRecord objectForKey:property]];
+      default:
+        modifySql = [modifySql stringByAppendingFormat:@"'%@',",[newRecord objectForKey:property]];
+        break;
+    }
+  }
+  modifySql = [modifySql substringToIndex:[modifySql length] - 1];
+  
+  whereClause == nil ? whereClause = [NSString stringWithFormat:@""]:whereClause;
+  
+  modifySql = [modifySql stringByAppendingFormat:@" where %@",whereClause];
+  
+  return [_manageTable UpdateBySqlString:[modifySql UTF8String]];
+}
+
+
+@end

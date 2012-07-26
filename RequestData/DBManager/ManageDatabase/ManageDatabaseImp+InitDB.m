@@ -1,0 +1,174 @@
+//
+//  ManageDatabaseImp+InitDB.m
+//  EnterSQLIte
+//
+//  Created by wei yang on 12-7-11.
+//  Copyright (c) 2012年 __MyCompanyName__. All rights reserved.
+//
+
+#import "ManageDatabaseImp+InitDB.h"
+
+@implementation ManageDatabaseImp (InitDB)
+
+- (bool)initDatabase{
+  
+  NSString *sql;
+  char *errMsg;
+  
+  sql = [NSString stringWithFormat:@"select * from goods_newly"];
+  
+  //if the table of goods_newly exists,then don't create it;
+  sqlite3_stmt *statement;
+  
+  if ([self my_sqlite_prepare_v2:[sql UTF8String] NBytes:-1 Statement:&statement Tail:nil] 
+      == SQLITE_OK) {
+    
+    sqlite3_finalize(statement);
+    return YES;
+    
+  }
+  sql = [NSString stringWithFormat:@"DROP TABLE IF EXISTS `goods_newly`"];
+  if ([self my_sqlite_exec:[sql UTF8String] ErrorMsg:&errMsg] != SQLITE_OK) {
+    [self ErrorMsg:[sql UTF8String]];
+    return NO;
+  }
+  
+  //if the table of goods_new not exists,the create it;
+  sql = [NSString stringWithFormat:@"CREATE TABLE IF NOT EXISTS `goods_newly`("
+                   "`newly_id` INTEGER AUTO_INCREMENT,"
+               //    "`type` INTEGER,"
+                   "`name` varchar(255),"
+                   "`description` varchar(500),"
+                   "`price` varchar(255),"
+              //     "`goods_thumbs` varchar(255),"
+               //    "`goods_img` varchar(255),"
+                   "`dress_img` varchar(255),"
+                   "`img_url` varchar(255),"
+                   "`thumbs_url` varchar(255),"
+                   "`buy_url` varchar(255),"
+               //    "`created_at` int(11),"
+                   "PRIMARY KEY (`newly_id`)"
+                   ");"];
+  
+  if ([self my_sqlite_exec:[sql UTF8String] ErrorMsg:&errMsg] != SQLITE_OK) {
+    [self ErrorMsg:[sql UTF8String]];
+    return NO;
+  }
+  
+  //add some record to goods_newly..
+  sql = [NSString stringWithFormat:@"INSERT INTO `goods_newly`"
+         "(`id`,`type`,`name`,`description`,`price`,`goods_thumbs`,`goods_img`,`dress_img`,"
+         "`dress1_img`,`dress2_img`,`buy_url`,`created_at`) "
+         "VALUES (1,4,'Valentino 蕾丝镂空连衣裙',"
+         "'充斥着镂空、蕾丝、花朵和刺绣的Valentino系列连衣裙令人印象深刻，"
+         "那一件件无比诱人的镂空连衣裙配以平底凉鞋，或配以蕾丝帆布便鞋，尽显其新鲜感。',"
+         "'￥26803.00','/look/goods/thumbs/01.png','/look/goods/img/01.png',"
+         "'/look/dress/01.png','/look/model1/01.png','/look/model2/01.png',"
+         "'http://store.valentino.com',1337777777);"];
+  
+  if ([self my_sqlite_exec:[sql UTF8String] ErrorMsg:&errMsg] != SQLITE_OK) {
+    return NO;
+  }
+  
+  sql = [NSString stringWithFormat:@"INSERT INTO `goods_newly` "
+         "(`id`,`type`,`name`,`description`,`price`,`goods_thumbs`,`goods_img`,"
+         "`dress_img`,`dress1_img`,`dress2_img`,`buy_url`,`created_at`) "
+         "VALUES (2,4,'Marni针织刺绣无袖连衣裙','今年春夏很多品牌都推出了轻薄材质的镂空款式连衣裙，"
+         "Marni此次的新品设计十分新颖，镂空与拼接图案的组合已经足够夺人眼球，"
+         "裙摆迷你的长度与滚边细节更是透着可爱与俏皮，平添了几分设计感。',"
+         "'￥8910.00','/look/goods/thumbs/02.png','/look/goods/img/02.png',"
+         "'/look/dress/02.png','/look/model1/02.png','/look/model2/02.png',"
+         "'http://www.marni.cn/home.asp',1337777777);"];
+  
+  if ([self my_sqlite_exec:[sql UTF8String] ErrorMsg:&errMsg] != SQLITE_OK) {
+    return NO;
+  }
+  
+  sql = [NSString stringWithFormat:@"INSERT INTO `goods_newly` "
+         "(`id`,`type`,`name`,`description`,`price`,`goods_thumbs`,"
+         "`goods_img`,`dress_img`,`dress1_img`,`dress2_img`,`buy_url`,`created_at`)"
+         "VALUES (3,4,'Stella Mccartney V领无袖连衣裙','运动风格的短款连衣裙洋溢着青春活力，很有网球少女的感觉。"
+         "而白色与薄荷色的搭配纯净甜美。夏日里这样的穿着能够给人清爽宜人的感觉。经过改良的V领虽然开口不小，"
+         "但是挺括顺滑的布料能够很好的勾勒出你的曲线，避免了不必要的麻烦。',"
+         "'￥8190.00','/look/goods/thumbs/03.png','/look/goods/img/03.png','/look/dress/03.png',"
+         "'/look/model1/03.png','/look/model2/03.png',"
+         "'http://www.stellamccartney.com/en/index.html',1337777777);"];
+  
+  if ([self my_sqlite_exec:[sql UTF8String] ErrorMsg:&errMsg] != SQLITE_OK) {
+    return NO;
+  }
+  
+  sql = [NSString stringWithFormat:@"INSERT INTO `goods_newly` "
+         "(`id`,`type`,`name`,`description`,`price`,`goods_thumbs`,"
+         "`goods_img`,`dress_img`,`dress1_img`,`dress2_img`,`buy_url`,`created_at`) "
+         "VALUES (4,4,'Marni无袖印花连衣裙','“彩绘玻璃”印花以及金银纱线为整个面料增辉；以这种技术形成整个印花。"
+         "深V领，两侧无袖连衣裙，直线轮廓。 ',"
+         "'￥7140.00','/look/goods/thumbs/04.png','/look/goods/img/04.png','/look/dress/04.png',"
+         "'/look/model1/04.png','/look/model2/04.png',"
+         "'http://www.marni.cn/home.asp',1337777777);"];
+  
+  if ([self my_sqlite_exec:[sql UTF8String] ErrorMsg:&errMsg] != SQLITE_OK) {
+    return NO;
+  }
+  
+  sql = [NSString stringWithFormat:@"INSERT INTO `goods_newly` "
+         "(`id`,`type`,`name`,`description`,`price`,`goods_thumbs`,"
+         "`goods_img`,`dress_img`,`dress1_img`,`dress2_img`,`buy_url`,`created_at`) "
+         "VALUES (5,4,'Karl 金属色连身裙','充满未来感的金属银色颇具特色，胸前的交叉褶皱设计增加摩登设计感，"
+         "搭配夹克外套、夸张风格配件是体现摇滚style的经典组合，当然足以令气场爆棚的高跟鞋也绝不能少。',"
+         "'￥1741.00','/look/goods/thumbs/05.png','/look/goods/img/05.png','/look/dress/05.png',"
+         "'/look/model1/05.png','/look/model2/05.png',"
+         "'http://www.karl.com/en_uk/shop-women/dresses/davin-twist-front-dress-10.html',"
+         "1337777777);"];
+  
+  if ([self my_sqlite_exec:[sql UTF8String] ErrorMsg:&errMsg] != SQLITE_OK) {
+    return NO;
+  }
+  
+  sql = [NSString stringWithFormat:@"INSERT INTO `goods_newly` "
+         "(`id`,`type`,`name`,`description`,`price`,`goods_thumbs`,"
+         "`goods_img`,`dress_img`,`dress1_img`,`dress2_img`,`buy_url`,`created_at`)"
+         "VALUES (6,4,'Diane Von Furstenberg短款连衣裙',"
+         "'V领无袖廓型设计精致而修身，归整的空心粉圆为立体针织，做工极其细腻，娇美的粉色具有春日的朝气，"
+         "恰到好处的腰线完美修饰身材比例，下摆的灰黑宽边显丰富层次感，并有修饰腿型的效果。',"
+         "'￥4410.00','/look/goods/thumbs/06.png','/look/goods/img/06.png','/look/dress/06.png',"
+         "'/look/model1/06.png','/look/model2/06.png',"
+         "'http://cn.shopbop.com/diane-von-furstenberg/br/v=1/2534374302023737.htm?all',"
+         "1337777777);"];
+  
+  if ([self my_sqlite_exec:[sql UTF8String] ErrorMsg:&errMsg] != SQLITE_OK) {
+    return NO;
+  }
+  
+  sql = [NSString stringWithFormat:@"INSERT INTO `goods_newly` "
+         "(`id`,`type`,`name`,`description`,`price`,`goods_thumbs`,"
+         "`goods_img`,`dress_img`,`dress1_img`,`dress2_img`,`buy_url`,`created_at`) "
+         "VALUES (7,4,'Diane Von Furstenberg蝙蝠袖连衣裙','此款蝙蝠袖连衣裙选用轻薄飘逸的面料，"
+         "宽松剪裁舒适而柔美，药丸状印花富有趣味性而有艺术感。','￥4280.00','/look/goods/thumbs/07.png',"
+         "'/look/goods/img/07.png','/look/dress/07.png','/look/model1/07.png',"
+         "'/look/model2/07.png',"
+         "'http://cn.shopbop.com/diane-von-furstenberg/br/v=1/2534374302023737.htm?all',"
+         "1337777777);"];
+  
+  if ([self my_sqlite_exec:[sql UTF8String] ErrorMsg:&errMsg] != SQLITE_OK) {
+    return NO;
+  }
+  
+  sql = [NSString stringWithFormat:@"INSERT INTO `goods_newly` "
+         "(`id`,`type`,`name`,`description`,`price`,`goods_thumbs`,"
+         "`goods_img`,`dress_img`,`dress1_img`,`dress2_img`,`buy_url`,`created_at`) "
+         "VALUES (8,4,'Hervé Lége水蜜桃色绷带裙','Max Azria旗下品牌Hervé Lége在春夏推出水蜜桃色绷带裙，"
+         "带有胸托的绷带紧身设计适合上围丰满的圆润身材。过于的消瘦则无法穿出最佳的效果。"
+         "甜美的水蜜桃颜色既能够衬托出雪白的肤色，对于偏黑的肤色也同样适合。在配饰的挑选上，裸色系与同色系为佳。',"
+         "'￥4361.00','/look/goods/thumbs/08.png','/look/goods/img/08.png','/look/dress/08.png',"
+         "'/look/model1/08.png','/look/model2/08.png','http://www.herveleger.com/',"
+         "1337777777);"];
+  
+  if ([self my_sqlite_exec:[sql UTF8String] ErrorMsg:&errMsg] != SQLITE_OK) {
+    return NO;
+  }
+  
+  return  YES;
+}
+
+@end

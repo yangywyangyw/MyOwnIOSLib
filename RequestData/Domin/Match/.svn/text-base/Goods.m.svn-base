@@ -1,0 +1,156 @@
+//
+//  Goods.m
+//  funMatch
+//
+//  Created by 谈 文钊 on 12/6/11.
+//  Copyright (c) 2011 __MyCompanyName__. All rights reserved.
+//
+
+#import "Goods.h"
+#import "DominKit.h"
+#import "Utils.h"
+
+#define kGoodsId @"goods_id"
+#define kGoodsName @"name"
+#define kSource @"source"
+#define kPrice @"price"
+#define kThumbsUrl @"thumbs_url"
+#define kImgUrl @"img_url"
+#define kBuyUrl @"buy_url"
+#define kDesignName @"designName"
+#define kShowDressing @"dress_img"
+#define kGoodsImage @"goods_img"
+#define KTmall @"tmall_id"
+#define kBrandId @"brand_id"
+#define kNewlyId @"newly_id"
+#define kDescription  @"description"
+#define KIsNewGood @"isNewGood"
+@implementation Goods
+@synthesize goodsId = _goodsId;
+@synthesize goodsName = _goodsName;
+@synthesize source = _source;
+@synthesize price = _price;
+@synthesize thumbsUrl = _thumbsUrl;
+@synthesize imgUrl = _imgUrl;
+@synthesize buyUrl = _buyUrl;
+@synthesize designName=_designName;
+@synthesize goodsImg=_goodsImg;
+@synthesize dressIng=_dressIng;
+@synthesize typeName =_typeName;
+@synthesize typeDescrip =_typeDescrip;
+@synthesize tmallId =_tmallId;
+@synthesize newlyId = _newlyId;
+@synthesize brandId = _brandId;
+@synthesize decription = _decription;
+@synthesize isNewGood =_isNewGood;
+- (void)dealloc
+{
+    RELEASE_SAFELY(_decription)
+    [_typeName release];
+    [_typeDescrip release];
+    [_dressIng release];
+    [_goodsImg release];
+    [_designName release];
+    [_goodsId release];
+    [_goodsName release];
+    [_source release];
+    [_price release];
+    [_thumbsUrl release];
+    [_imgUrl release];
+    [_buyUrl release];
+    
+    [super dealloc];
+}
+
+- (id)initWithAttributes:(NSDictionary *)attributes
+{
+    if (self = [super init]) {
+      
+
+        self.tmallId =[[attributes valueForKey:KTmall] longLongValue];
+        self.goodsId = [attributes valueForKey:kGoodsId];
+        self.goodsName = [attributes valueForKey:kGoodsName];
+      //  self.source = [attributes valueForKey:kSource];
+        self.price = [attributes valueForKey:kPrice];
+//        if([self.goodsName rangeOfString:@"\\n"].length>0)
+//        {
+//            NSArray *array=[self.goodsName componentsSeparatedByString:@"\\n"];
+//            self.designName=[array objectAtIndex:0];
+//            self.goodsName=[array objectAtIndex:1];
+//        }
+      
+       // self.goodsName=[self.goodsName stringByReplacingOccurrencesOfString:@"\\n" withString:@" "];
+        self.price = [self.price stringByReplacingOccurrencesOfString:@" " withString:@""];
+        self.price = [self.price stringByReplacingOccurrencesOfString:@"&pound;" withString:@"£"];
+        self.price = [self.price stringByReplacingOccurrencesOfString:@"yen;" withString:@"¥"];
+        self.thumbsUrl = [NSString stringWithFormat:@"%@%@", kWebSiteURL, [attributes valueForKey:kThumbsUrl]];
+        self.imgUrl = [NSString stringWithFormat:@"%@%@", kWebSiteURL, [attributes valueForKey:kImgUrl]];
+        self.buyUrl = [attributes valueForKey:kBuyUrl];
+        self.brandId = [[attributes valueForKey:kBrandId] integerValue];
+        self.newlyId = [[attributes valueForKey:kNewlyId] integerValue];
+        self.decription = [attributes valueForKey:kDescription];
+        
+        self.goodsImg=[NSString stringWithFormat:@"%@%@",kWebSiteURL,[attributes valueForKey:kGoodsImage]];
+        self.dressIng=[NSString stringWithFormat:@"%@%@",kWebSiteURL,[attributes valueForKey:kShowDressing]];
+
+    }
+    return self;
+}
+
+- (id)initWithCoder:(NSCoder *)decoder {
+	if (self = [super init]) {
+        self.goodsId = [decoder decodeObjectForKey:kGoodsId];
+        self.goodsName = [decoder decodeObjectForKey:kGoodsName];
+        self.source = [decoder decodeObjectForKey:kSource];
+        self.price = [decoder decodeObjectForKey:kPrice];
+        self.thumbsUrl = [decoder decodeObjectForKey:kThumbsUrl];
+        self.imgUrl = [decoder decodeObjectForKey:kImgUrl];
+        self.buyUrl = [decoder decodeObjectForKey:kBuyUrl];
+        self.designName=[decoder decodeObjectForKey:kDesignName];
+        self.dressIng=[decoder decodeObjectForKey:kShowDressing];
+        self.goodsImg=[decoder decodeObjectForKey:kGoodsImage];
+        self.brandId = [decoder decodeIntegerForKey:kBrandId];
+        self.newlyId = [decoder decodeIntegerForKey:kNewlyId];
+        self.decription = [decoder decodeObjectForKey:kDescription];
+        self.isNewGood =[decoder decodeBoolForKey:KIsNewGood];
+	}
+	return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)encoder {
+    [encoder encodeObject:self.goodsId forKey:kGoodsId];
+    [encoder encodeObject:self.goodsName forKey:kGoodsName];
+    [encoder encodeObject:self.source forKey:kSource];
+    [encoder encodeObject:self.price forKey:kPrice];
+    [encoder encodeObject:self.thumbsUrl forKey:kThumbsUrl];
+    [encoder encodeObject:self.imgUrl forKey:kImgUrl];
+    [encoder encodeObject:self.buyUrl forKey:kBuyUrl];
+    [encoder encodeObject:self.designName forKey:kDesignName];
+    [encoder encodeObject:self.dressIng forKey:kShowDressing];
+    [encoder encodeObject:self.goodsImg forKey:kGoodsImage];
+    [encoder encodeInteger:self.brandId forKey:kBrandId];
+    [encoder encodeInteger:self.newlyId forKey:kNewlyId];
+    [encoder encodeObject:self.decription forKey:kDescription];
+    [encoder encodeBool:self.isNewGood forKey:KIsNewGood];
+}
+
+- (NSUInteger)hash
+{
+    return [self.goodsId integerValue];
+}
+
+- (BOOL)isEqual:(id)object
+{
+    if ([object isKindOfClass:[Goods class]])
+    {
+        Goods *aGoods = (Goods *)object;
+        if(self.isNewGood){
+            if(self.newlyId ==aGoods.newlyId)return YES;
+            else return NO;
+        }
+        return [self.goodsId isEqualToString:aGoods.goodsId];
+    }
+    return NO;
+}
+
+@end

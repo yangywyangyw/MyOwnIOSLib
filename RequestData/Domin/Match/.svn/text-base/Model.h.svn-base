@@ -1,0 +1,23 @@
+//
+//  Model.h
+//  funMatch_iPad
+//
+//  Created by Dean on 12-6-6.
+//  Copyright (c) 2012年 __MyCompanyName__. All rights reserved.
+//
+
+#import "ModelObject.h"
+
+typedef enum{
+   SystemType = 1,
+   MeByType,
+   MeNoByType,
+   NoType
+}ModelType;
+
+
+@interface Model : ModelObject
+@property (nonatomic,retain)NSString  *modelId;
+@property (nonatomic,retain)NSString  *imgURL;
+@property (nonatomic,assign)ModelType  type;   //标记是否是系统的还是自己的
+@end

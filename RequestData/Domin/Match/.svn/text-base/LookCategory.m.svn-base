@@ -1,0 +1,32 @@
+//
+//  LookCategory.m
+//  funMatch_iPad
+//
+//  Created by Dean on 12-6-26.
+//  Copyright (c) 2012年 __MyCompanyName__. All rights reserved.
+//
+
+#import "LookCategory.h"
+#import "Utils.h"
+
+@implementation LookCategory
+@synthesize typeId = _typeId;
+@synthesize name = _name;
+
+- (void)dealloc
+{
+    RELEASE_SAFELY(_name)
+    [super dealloc];
+}
+
+- (id)initWithAttributes:(NSDictionary *)attributes
+{
+    if(self = [super init]){
+        self.typeId = [[attributes  objectForKey:@"type_id"] integerValue];
+        self.name = [NSString stringWithFormat:@"%@",[attributes objectForKey:@"name"]];
+    }
+    
+    return self;
+}
+
+@end
