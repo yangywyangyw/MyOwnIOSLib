@@ -56,6 +56,7 @@
   
   self.view = contentView; 
   
+  
   //create netwrok button
   self.netWorkButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
   self.netWorkButton.frame = CGRectMake(110.0f, 200.0f, 200.0f, 107.0f);
