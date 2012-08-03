@@ -34,21 +34,23 @@
                 UseWhereClause:(NSString*)whereClause
                        GroupBy:(NSString*)groupBy
                         Having:(NSString*)having
-                       OrderBy:(NSString*)orderBy;
+                       OrderBy:(NSString*)orderBy 
+                         CLazz:(Class)cls;
 
 //list all record of the table
-- (NSMutableArray*)listAllRecord;
+- (NSMutableArray*)listAllRecord:(Class)cls ;
 
 //find one record just use where clause
-- (NSMutableArray*)findRecord:(NSString*)whereClause;
+- (NSMutableArray*)findRecord:(NSString*)whereClause 
+                        CLazz:(Class)cls;
 
 //insert one record to the table
-- (bool)insertSingleRecord:(NSDictionary*)record;
+- (bool)insertSingleRecord:(id)record;
 
 //delete one record to the table
 - (bool)deleteSingleRecord:(NSString*)whereClause;
 
 
-- (bool)modifySingleRecord:(NSDictionary*)newRecord 
+- (bool)modifySingleRecord:(id)newRecord 
             UseWhereClause:(NSString*)whereClause;
 @end

@@ -7,6 +7,7 @@
 //
 
 #import "ManageTableImp.h"
+#import "objc/runtime.h"
 
 
 @implementation ManageTableImp
@@ -116,7 +117,38 @@ const char* dbName = "FunMatch.sqlite";
   }
   
 }
-- (NSMutableArray*)queryBySqlString:(const char*)sql ColumnCount:(unsigned int)columnCount{
+
+-(id)convertRowToModel:(Class)cls stmt:(sqlite3_stmt *)stmt {
+  id model=nil;
+  model =[[cls alloc] init];
+  
+  int coloumncount=sqlite3_column_count(stmt);
+  
+  for(int i=0; i<coloumncount; i++){
+    char* colname=(char*)sqlite3_column_name(stmt, i);
+    
+    NSString* strcolname=[NSString stringWithUTF8String:colname];
+    
+   // char* deltyp =(char*)sqlite3_column_decltype(stmt, i);
+    
+   // NSLog(@"chartype = %s",deltyp);
+    
+   // int ctype=sqlite3_column_type(stmt, i);
+    
+    char* cvalue=(char*)sqlite3_column_text(stmt, i);
+    
+    if(cvalue!=NULL){
+      //[model setValue:[NSString stringWithUTF8String:cvalue] forKey:strcolname];
+      Ivar peroperty = class_getInstanceVariable([model class], [strcolname UTF8String]);
+      object_setIvar(model, peroperty, cvalue);
+    }
+  }
+  return model;
+}
+
+- (NSMutableArray*)queryBySqlString:(const char*)sql
+                        ColumnCount:(int)columnCount
+                              CLazz:(Class)cls{
 
   sqlite3_stmt *statement;
   NSMutableArray *allRecord = [NSMutableArray array];
@@ -129,7 +161,7 @@ const char* dbName = "FunMatch.sqlite";
     NSLog(@"select suscess..");
     
     while (sqlite3_step(statement) == SQLITE_ROW) {
-      NSMutableDictionary *record = [[NSMutableDictionary alloc] init];
+      /*NSMutableDictionary *record = [[NSMutableDictionary alloc] init];
       for (int i = 0; i < columnCount; i++) {
         if (sqlite3_column_text(statement, i) == NULL) {
           continue;
@@ -139,7 +171,8 @@ const char* dbName = "FunMatch.sqlite";
         [record setObject:value forKey:key];
         [value release];
         [key release];
-      }
+      }*/
+      id record = [self convertRowToModel:cls stmt:statement];
       [allRecord addObject:record];
       [record release];
     }

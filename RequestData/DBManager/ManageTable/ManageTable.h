@@ -22,7 +22,9 @@
 - (bool)insertBySqlString:(const char*)sql;
 
 //use a sql sentece to query the table..
-- (NSMutableArray*)queryBySqlString:(const char*)sql ColumnCount:(int) columnCount;
+- (NSMutableArray*)queryBySqlString:(const char*)sql 
+                        ColumnCount:(int)columnCount
+                              CLazz:(Class)cls;
 
 //use a sql sentence to delete some record of the table..
 - (bool)deleteBySqlString:(const char*)sql;

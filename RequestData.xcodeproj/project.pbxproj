@@ -64,6 +64,7 @@
 		05885E8315B6881E00B334D1 /* ManageTableImp.m in Sources */ = {isa = PBXBuildFile; fileRef = 05885E7F15B6881E00B334D1 /* ManageTableImp.m */; };
 		05885E8515B68B7800B334D1 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 05885E8415B68B7800B334D1 /* libsqlite3.dylib */; };
 		05885EC515B6960500B334D1 /* Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 05885EC015B6960500B334D1 /* Utils.m */; };
+		05E6B84415CBB1FA00C9A3EF /* ResumeDownloads.m in Sources */ = {isa = PBXBuildFile; fileRef = 05E6B84315CBB1FA00C9A3EF /* ResumeDownloads.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -183,6 +184,8 @@
 		05885EB515B6960500B334D1 /* CommonHMAC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommonHMAC.h; sourceTree = "<group>"; };
 		05885EBF15B6960500B334D1 /* Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Utils.h; sourceTree = "<group>"; };
 		05885EC015B6960500B334D1 /* Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Utils.m; sourceTree = "<group>"; };
+		05E6B84215CBB1FA00C9A3EF /* ResumeDownloads.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ResumeDownloads.h; sourceTree = "<group>"; };
+		05E6B84315CBB1FA00C9A3EF /* ResumeDownloads.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ResumeDownloads.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -322,6 +325,7 @@
 		05885D3A15B66C6B00B334D1 /* Domin */ = {
 			isa = PBXGroup;
 			children = (
+				05E6B84115CBB1FA00C9A3EF /* ResumeDownloads */,
 				0580D81015C0E58300122FFE /* Cryption */,
 				05885E8615B68EE300B334D1 /* general */,
 			);
@@ -533,6 +537,15 @@
 			name = Query;
 			sourceTree = "<group>";
 		};
+		05E6B84115CBB1FA00C9A3EF /* ResumeDownloads */ = {
+			isa = PBXGroup;
+			children = (
+				05E6B84215CBB1FA00C9A3EF /* ResumeDownloads.h */,
+				05E6B84315CBB1FA00C9A3EF /* ResumeDownloads.m */,
+			);
+			path = ResumeDownloads;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -637,6 +650,7 @@
 				0583D9E915C11BF30061D9A7 /* unzip.c in Sources */,
 				0583D9EA15C11BF30061D9A7 /* zip.c in Sources */,
 				0583D9EB15C11BF30061D9A7 /* ZipArchive.mm in Sources */,
+				05E6B84415CBB1FA00C9A3EF /* ResumeDownloads.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

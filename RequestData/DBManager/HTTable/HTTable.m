@@ -6,7 +6,9 @@
 //  Copyright (c) 2012年 __MyCompanyName__. All rights reserved.
 //
 
+#import <objc/runtime.h>
 #import "HTTable.h"
+
 
 @implementation HTTable
 
@@ -37,26 +39,28 @@
 
 }
 
-- (bool)checkRecord:(NSDictionary*)record{
+- (bool)checkRecord:(id)record{
+  unsigned int propertyCount = 0;
+  id tableProperty;
+
+  objc_property_t *propertyList = class_copyPropertyList([record class], &propertyCount);
   
-  NSEnumerator *recordProperties = [record keyEnumerator];
-  NSEnumerator *tableProperties = [_tableProperty keyEnumerator];
-  id recordProperty;
-  
-  //check the effective of the record property, if not exist in 
-  //the table property , then it's wrong..
-  while ((recordProperty = [recordProperties nextObject])) {  
+  for (int i = 0; i < propertyCount; i++) {
+    objc_property_t *thisProperty = propertyList + i;
+    const char *propertyName = property_getName(*thisProperty);
+    id strProperty = [NSString stringWithFormat:@"%s",propertyName];
+    NSEnumerator *tableProperties = [_tableProperty keyEnumerator];
     bool existInTableProperty = NO;
-    id tableProperty;
-  //  NSLog(@"%@",recordProperty);
-    while ((tableProperty = [tableProperties nextObject])) {
-      if ([tableProperty isEqualToString:recordProperty]) {
+    while ((tableProperty = [tableProperties nextObject])) {  
+ //     NSLog(strProperty);
+ //     NSLog(tableProperty);
+      if ([strProperty isEqualToString:tableProperty]) {
         existInTableProperty = YES;
         break;
       }
     }
-    tableProperties = [_tableProperty keyEnumerator];
     if (existInTableProperty == NO) {
+      NSLog(@"data model name(%@) different from the table property name..",strProperty);
       return NO;
     }
   }
@@ -67,7 +71,8 @@
                 UseWhereClause:(NSString*)whereClause
                        GroupBy:(NSString*)groupBy
                         Having:(NSString*)having
-                       OrderBy:(NSString*)orderBy{
+                       OrderBy:(NSString*)orderBy 
+                         CLazz:(Class)cls{
   
   //link a select sql sentence..
   NSString *querySql = [NSString stringWithFormat:@"select "];
@@ -101,18 +106,20 @@
   NSArray *propertyName = [_tableProperty allValues]; 
   int columnCount = [propertyName count];
   return [_manageTable queryBySqlString:[querySql cStringUsingEncoding:NSUTF8StringEncoding]
-                            ColumnCount:columnCount];
+                            ColumnCount:columnCount 
+                                  CLazz:cls];
 }
 
-- (NSMutableArray*)listAllRecord{
-  return [self queryRecord:nil UseWhereClause:nil GroupBy:nil Having:nil OrderBy:nil];
+- (NSMutableArray*)listAllRecord:(Class)cls{
+  return [self queryRecord:nil UseWhereClause:nil GroupBy:nil Having:nil OrderBy:nil CLazz:cls];
 }
 
-- (NSMutableArray*)findRecord:(NSString *)whereClause{
-  return [self queryRecord:nil UseWhereClause:whereClause GroupBy:nil Having:nil OrderBy:nil];
+- (NSMutableArray*)findRecord:(NSString *)whereClause 
+                        CLazz:(Class)cls{
+  return [self queryRecord:nil UseWhereClause:whereClause GroupBy:nil Having:nil OrderBy:nil CLazz:cls];
 }
 
-- (bool)insertSingleRecord:(NSDictionary *)record{
+- (bool)insertSingleRecord:(id)record{
   
   if([self checkRecord:record] == NO){
     return NO;
@@ -120,37 +127,48 @@
   
   //link a insert sentence.. 
   NSString *insertSql = [NSString stringWithFormat:@"insert into %@ (",_tableName];
+
+  unsigned int propertyCount = 0;  
+  Ivar *propertyList = class_copyIvarList([record class], &propertyCount);
   
   //link the property
-  NSEnumerator *propertys = [record keyEnumerator];
-  id property;
-   while((property = [propertys nextObject])){
-    insertSql = [insertSql stringByAppendingFormat:@"%@,",property];
+  for (int i = 0; i < propertyCount; i++) {
+    Ivar *thisProperty = propertyList + i;
+    const char *propertyName = ivar_getName(*thisProperty);
+    id strProperty = [NSString stringWithCString:propertyName 
+                                        encoding:NSUTF8StringEncoding];
+    insertSql = [insertSql stringByAppendingFormat:@"%@,",strProperty];
   }
   
   //link the value of property..
   insertSql = [insertSql substringToIndex:[insertSql length] - 1];
   insertSql = [insertSql stringByAppendingFormat:@") values("];
   
-  propertys = [record keyEnumerator];
-  
-  id propertyType;
-  
-  while((property = [propertys nextObject])){
-    propertyType = [_tableProperty objectForKey:property];
-    switch ((int)(propertyType)) {
+  //propertyList = class_copyPropertyList([record class], &propertyCount);
+  propertyList = class_copyIvarList([record class], &propertyCount);
+  for (int i = 0; i < propertyCount; i++) {
+    Ivar *thisProperty = propertyList + i;
+    const char *propertyName = ivar_getName(*thisProperty);
+    id strProperty = [NSString stringWithCString:propertyName 
+                                        encoding:NSUTF8StringEncoding];
+    id propertyType = [_tableProperty objectForKey:strProperty];
+  //  Ivar propertyValue = class_getClassVariable([record class], propertyName);
+    id propertyValue = [record valueForKey:strProperty];
+    //NSLog(@"%@  = %@",strProperty, value1);
+    switch ([propertyType intValue]) {
       case SQLITE_INTEGER:
-        insertSql = [insertSql stringByAppendingFormat:@"%d,",[record objectForKey:property]];
+        insertSql = [insertSql stringByAppendingFormat:@"%d,",propertyValue];
         break;
       case SQLITE_FLOAT:
-        insertSql = [insertSql stringByAppendingFormat:@"%f,",[record objectForKey:property]];
+        insertSql = [insertSql stringByAppendingFormat:@"%f,",propertyValue];
       case SQLITE_TEXT:
-        insertSql = [insertSql stringByAppendingFormat:@"'%@',",[record objectForKey:property]];
+        insertSql = [insertSql stringByAppendingFormat:@"'%@',",propertyValue];
       default:
-        insertSql = [insertSql stringByAppendingFormat:@"'%@',",[record objectForKey:property]];
+        insertSql = [insertSql stringByAppendingFormat:@"'%@',",propertyValue];
         break;
     }
   }
+  
   insertSql = [insertSql substringToIndex:[insertSql length] - 1];
   insertSql = [insertSql stringByAppendingFormat:@")"];
   
@@ -171,7 +189,7 @@
   return [_manageTable deleteBySqlString:[deleteSql UTF8String]];
 }
 
-- (bool)modifySingleRecord:(NSDictionary*)newRecord 
+- (bool)modifySingleRecord:(id)newRecord 
             UseWhereClause:(NSString*)whereClause{
   
   if([self checkRecord:newRecord] == NO){
@@ -179,31 +197,35 @@
   }
   
   //link a update sentence..
-  
   NSString *modifySql = [NSString stringWithFormat:@"update %@ set ",_tableName];
-  NSEnumerator *propertys = [newRecord keyEnumerator];
-  id property;
   
   //check the type of the property
-  while ((property = [propertys nextObject])) {
-    
-    modifySql = [modifySql stringByAppendingFormat:@"%@ = ",property];
-    NSNumber *propertyType = [_tableProperty objectForKey:property];
-  //  propertyType = [_tableProperty objectForKey:property];
-    
+  unsigned int propertyCount = 0;
+  Ivar* propertyList = class_copyIvarList([newRecord class], &propertyCount);
+  
+  for (int i = 0; i < propertyCount; i++) {
+    Ivar *thisProperty = propertyList + i;
+    const char *propertyName = ivar_getName(*thisProperty);
+    id strProperty = [NSString stringWithCString:propertyName 
+                                        encoding:NSUTF8StringEncoding];
+    id propertyType = [_tableProperty objectForKey:strProperty];
+    modifySql = [modifySql stringByAppendingFormat:@"%@ = ",strProperty];
+ //   Ivar propertyValue = class_getClassVariable([newRecord class], propertyName);
+    id propertyValue = [newRecord valueForKey:strProperty];
     switch ([propertyType intValue]) {
       case SQLITE_INTEGER:
-        modifySql = [modifySql stringByAppendingFormat:@"%d,",[newRecord objectForKey:property]];
+        modifySql = [modifySql stringByAppendingFormat:@"%d,",propertyValue];
         break;
       case SQLITE_FLOAT:
-        modifySql = [modifySql stringByAppendingFormat:@"%f,",[newRecord objectForKey:property]];
+        modifySql = [modifySql stringByAppendingFormat:@"%f,",propertyValue];
       case SQLITE_TEXT:
-        modifySql = [modifySql stringByAppendingFormat:@"'%@',",[newRecord objectForKey:property]];
+        modifySql = [modifySql stringByAppendingFormat:@"'%@',",propertyValue];
       default:
-        modifySql = [modifySql stringByAppendingFormat:@"'%@',",[newRecord objectForKey:property]];
+        modifySql = [modifySql stringByAppendingFormat:@"'%@',",propertyValue];
         break;
     }
   }
+
   modifySql = [modifySql substringToIndex:[modifySql length] - 1];
   
   whereClause == nil ? whereClause = [NSString stringWithFormat:@""]:whereClause;

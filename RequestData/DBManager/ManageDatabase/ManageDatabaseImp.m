@@ -23,6 +23,7 @@
   
   NSString *databaseFilePath = [[documentsPaths objectAtIndex:0] stringByAppendingFormat:_dbName];
   
+  NSLog(databaseFilePath);
   if(sqlite3_open([databaseFilePath UTF8String], &_database) == SQLITE_OK){
     NSLog(@"open sqlite db ok..");
   }
